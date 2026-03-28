@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// AUTH TABLES (BetterAuth managed)
+// ============================================================
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Plan & Credits
+  plan           Plan     @default(FREE)
+  credits        Int      @default(10)
+  creditsResetAt DateTime @default(now())
+
+  // Relations
+  sessions     Session[]
+  accounts     Account[]
+  generations  Generation[]
+  savedImages  SavedImage[]
+  styleProfile StyleProfile?
+  creditLogs   CreditLog[]
+  subscription Subscription?
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// ============================================================
+// CORE APP TABLES
+// ============================================================
+
+model Generation {
+  id             String       @id @default(cuid())
+  prompt         String
+  enhancedPrompt String? // Claude-enhanced version
+  imageUrl       String
+  size           ImageSize    @default(SQUARE)
+  quality        ImageQuality @default(STANDARD)
+  style          DalleStyle   @default(VIVID)
+  stylePreset    String? // e.g. "anime", "cartoon", "oil_painting"
+  model          String       @default("dall-e-3")
+  creditsUsed    Int          @default(1)
+  status         GenStatus    @default(COMPLETED)
+  createdAt      DateTime     @default(now())
+
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  savedImage SavedImage?
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("generation")
+}
+
+model SavedImage {
+  id         String   @id @default(cuid())
+  title      String?
+  tags       String[] @default([])
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  generationId String     @unique
+  generation   Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("saved_image")
+}
+
+model StyleProfile {
+  id               String       @id @default(cuid())
+  favoriteStyles   String[]     @default([]) // ["anime", "cinematic", "watercolor"]
+  colorMood        String? // "warm", "cool", "monochrome", "vibrant"
+  artistInfluences String[]     @default([]) // ["Studio Ghibli", "Monet"]
+  defaultSize      ImageSize    @default(SQUARE)
+  defaultQuality   ImageQuality @default(STANDARD)
+  defaultStyle     DalleStyle   @default(VIVID)
+  updatedAt        DateTime     @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("style_profile")
+}
+
+model CreditLog {
+  id        String       @id @default(cuid())
+  amount    Int // positive = added, negative = used
+  reason    CreditReason
+  note      String?
+  createdAt DateTime     @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("credit_log")
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  stripeCustomerId String?   @unique
+  stripePriceId    String?
+  stripeSubId      String?   @unique
+  plan             Plan      @default(FREE)
+  status           SubStatus @default(ACTIVE)
+  renewsAt         DateTime?
+  canceledAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscription")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Plan {
+  FREE
+  PRO
+  PAYG // Pay-as-you-go
+}
+
+enum ImageSize {
+  SQUARE // 1024x1024
+  PORTRAIT // 1024x1792
+  LANDSCAPE // 1792x1024
+}
+
+enum ImageQuality {
+  STANDARD
+  HD
+}
+
+enum DalleStyle {
+  VIVID
+  NATURAL
+}
+
+enum GenStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum CreditReason {
+  DAILY_RESET
+  PURCHASE
+  GENERATION_STANDARD
+  GENERATION_HD
+  REFUND
+  BONUS
+  SUBSCRIPTION_PRO
+}
+
+enum SubStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIALING
+}
