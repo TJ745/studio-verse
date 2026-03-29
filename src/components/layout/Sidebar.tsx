@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
@@ -11,16 +12,16 @@ const NAV = [
   {
     group: "Create",
     items: [
-      { href: "/app/dashboard", icon: "✦", label: "Generate" },
-      { href: "/app/history", icon: "◈", label: "History" },
-      { href: "/app/style-profile", icon: "◉", label: "Style DNA" },
+      { href: "/dashboard", icon: "✦", label: "Generate" },
+      { href: "/history", icon: "◈", label: "History" },
+      { href: "/style-profile", icon: "◉", label: "Style DNA" },
     ],
   },
   {
     group: "Account",
     items: [
-      { href: "/app/workbench", icon: "⬡", label: "Workbench" },
-      { href: "/app/billing", icon: "◇", label: "Billing" },
+      { href: "/workbench", icon: "⬡", label: "Workbench" },
+      { href: "/billing", icon: "◇", label: "Billing" },
     ],
   },
 ];
@@ -487,9 +488,9 @@ export function Sidebar({ user }: { user: SidebarUser }) {
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         {/* Logo */}
         <div className="sidebar-logo">
-          <div className="logo-mark">L</div>
-          <Link href="/app/dashboard" className="logo-text">
-            Lumina Studio
+          <div className="logo-mark">S</div>
+          <Link href="/dashboard" className="logo-text">
+            StudioVerse
           </Link>
           <button
             className="collapse-btn"
@@ -558,7 +559,7 @@ export function Sidebar({ user }: { user: SidebarUser }) {
                 <div className="credit-sub">
                   {user?.credits ?? 0} / 10 remaining today
                 </div>
-                <Link href="/app/billing" className="upgrade-btn">
+                <Link href="/billing" className="upgrade-btn">
                   ✦ Upgrade to Pro
                 </Link>
               </>
@@ -569,7 +570,11 @@ export function Sidebar({ user }: { user: SidebarUser }) {
         {/* User footer */}
         <div className="sidebar-user">
           <div className="user-avatar">
-            {user?.image ? <img src={user.image} alt={user.name} /> : initials}
+            {user?.image ? (
+              <Image src={user.image} alt={user.name} width={50} height={50} />
+            ) : (
+              initials
+            )}
           </div>
           <div className="user-info">
             <div className="user-name">{user?.name ?? "User"}</div>

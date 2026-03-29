@@ -904,7 +904,7 @@ export default function LandingPage() {
       {/* ── Navigation ─────────────────────────────── */}
       <nav>
         <Link href="/" className="nav-logo">
-          Lumina Studio
+          StudioVerse
         </Link>
         <ul className="nav-links">
           <li>
@@ -1023,7 +1023,9 @@ export default function LandingPage() {
 
             <div className="demo-bottom">
               <div className="demo-prompt-row">
-                <span className="demo-prompt-text">"{promptText}"</span>
+                <span className="demo-prompt-text">
+                  &quot;{promptText}&quot;
+                </span>
                 <span className="demo-enhance-tag">✦ AI Enhanced</span>
               </div>
               <div className="demo-btn-row">

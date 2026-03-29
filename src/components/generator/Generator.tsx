@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ImageSize = "SQUARE" | "PORTRAIT" | "LANDSCAPE";
@@ -1000,12 +1001,12 @@ export function Generator({
               {!isPro && credits < creditCost && !loading && (
                 <p className="no-credits-msg">
                   Not enough credits.{" "}
-                  <a
-                    href="/app/billing"
+                  <Link
+                    href="/billing"
                     style={{ color: "var(--gold)", textDecoration: "none" }}
                   >
                     Upgrade to Pro →
-                  </a>
+                  </Link>
                 </p>
               )}
 
@@ -1136,16 +1137,16 @@ export function Generator({
 
               {/* Actions */}
               <div className="result-actions">
-                <a
+                <Link
                   href={result.imageUrl}
                   download={`lumina-${result.id}.png`}
                   className="action-btn primary"
                 >
                   ↓ Download
-                </a>
-                <a href={`/app/workbench/${result.id}`} className="action-btn">
+                </Link>
+                <Link href={`/workbench/${result.id}`} className="action-btn">
                   ⬡ Open in Workbench
-                </a>
+                </Link>
                 <button
                   className="action-btn"
                   onClick={() => {

@@ -64,7 +64,7 @@ export default function RegisterPage() {
       name,
       email,
       password,
-      callbackURL: "/app/dashboard",
+      callbackURL: "/dashboard",
     });
 
     if (result.error) {
@@ -155,7 +155,7 @@ export default function RegisterPage() {
             ✦ Go to sign in
           </Link>
           <p style={{ fontSize: 12, color: "var(--muted)", fontWeight: 300 }}>
-            Didn't get it? Check your spam folder.
+            Didn&apos;t get it? Check your spam folder.
           </p>
         </div>
       </>
@@ -597,8 +597,8 @@ export default function RegisterPage() {
 
       <p className="auth-terms">
         By creating an account you agree to our{" "}
-        <a href="/terms">Terms of Service</a> and{" "}
-        <a href="/privacy">Privacy Policy</a>.
+        <Link href="/terms">Terms of Service</Link> and{" "}
+        <Link href="/privacy">Privacy Policy</Link>.
       </p>
     </>
   );

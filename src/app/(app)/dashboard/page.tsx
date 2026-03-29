@@ -1,6 +1,3 @@
-// src/app/(app)/dashboard/page.tsx
-// Main dashboard — embeds the Generator UI
-
 import { requireUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Generator } from "@/components/generator/Generator";

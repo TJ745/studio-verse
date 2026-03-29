@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/app/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -350,12 +350,14 @@ export default function LoginPage() {
 
       {/* Switch to register */}
       <div className="auth-switch">
-        Don't have an account? <Link href="/register">Create one free →</Link>
+        Don&apos;t have an account?{" "}
+        <Link href="/register">Create one free →</Link>
       </div>
 
       <p className="auth-terms">
-        By signing in you agree to our <a href="/terms">Terms of Service</a> and{" "}
-        <a href="/privacy">Privacy Policy</a>.
+        By signing in you agree to our{" "}
+        <Link href="/terms">Terms of Service</Link> and{" "}
+        <Link href="/privacy">Privacy Policy</Link>.
       </p>
     </>
   );

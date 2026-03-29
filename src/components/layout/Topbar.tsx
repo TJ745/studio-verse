@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 
 // ─── Page title map ────────────────────────────────────────────────────────────
 const PAGE_TITLES: Record<string, { title: string; sub: string }> = {
-  "/app/dashboard": { title: "Generate", sub: "Create images with DALL·E 3" },
-  "/app/history": { title: "History", sub: "Your generation timeline" },
-  "/app/style-profile": {
+  "/dashboard": { title: "Generate", sub: "Create images with DALL·E 3" },
+  "/history": { title: "History", sub: "Your generation timeline" },
+  "/style-profile": {
     title: "Style DNA",
     sub: "Your personal aesthetic profile",
   },
-  "/app/workbench": { title: "Workbench", sub: "Edit and refine your images" },
-  "/app/billing": { title: "Billing", sub: "Credits and subscription" },
+  "/workbench": { title: "Workbench", sub: "Edit and refine your images" },
+  "/billing": { title: "Billing", sub: "Credits and subscription" },
 };
 
 type TopbarUser = {
@@ -206,7 +206,7 @@ export function Topbar({ user }: { user: TopbarUser }) {
           </span>
 
           {/* Credit pill */}
-          <Link href="/app/billing" style={{ textDecoration: "none" }}>
+          <Link href="/billing" style={{ textDecoration: "none" }}>
             <div className="topbar-credit-pill">
               <div className={`credit-dot ${!isPro ? "pulse" : ""}`} />
               <span className="topbar-credit-val">
@@ -222,8 +222,8 @@ export function Topbar({ user }: { user: TopbarUser }) {
           </Link>
 
           {/* Quick generate button (hidden on dashboard itself) */}
-          {pathname !== "/app/dashboard" && (
-            <Link href="/app/dashboard" className="topbar-gen-btn">
+          {pathname !== "/dashboard" && (
+            <Link href="/dashboard" className="topbar-gen-btn">
               <span className="btn-icon">✦</span>
               Generate
             </Link>

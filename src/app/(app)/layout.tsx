@@ -1,6 +1,3 @@
-// src/app/(app)/layout.tsx
-// App shell layout — wraps all /app/* routes with sidebar + topbar
-
 import { requireUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Sidebar } from "@/components/layout/Sidebar";
